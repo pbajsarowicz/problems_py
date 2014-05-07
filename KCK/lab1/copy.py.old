@@ -1,0 +1,63 @@
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.ticker import FuncFormatter
+from sys import *
+
+def wczytajDane(file):
+    data = []
+    with open(file,'r') as f:
+        data = f.readlines()
+    X = []
+    Y = []
+    #OX
+    for element in range(1,len(data)):
+        temp = data[element].split(',')
+        X.append(temp[1])
+    #OY srednia
+    for element in range(1,len(data)):
+        temp = data[element].split(',')
+        temp = [float(l) for l in temp]
+        Y.append(np.mean(temp[2:]))
+
+    return X, Y
+
+
+def main():
+    plt.figure(figsize=(6.7, 5))
+
+    #plt.xticks(np.arange(4),  ('Bill', 'Fred', 'Mary', 'Sue'))
+    #Formatowanie wykresu
+    plt.xticks((100000,200000,300000,400000,500000))
+    plt.yticks(np.arange(0.6,1.0,0.05))
+    plt.xlabel('Rozegranych gier')
+    plt.ylabel('Odsetek wygranych gier')
+
+    #Ladowanie danych z plikow
+    TwoCelX,TwoCelY = wczytajDane('2cel.csv')
+    TwoCelRsX,TwoCelRsY = wczytajDane('2cel-rs.csv')
+    CelX,CelY = wczytajDane('cel.csv')
+    CelRsX,CelRsY = wczytajDane('cel-rs.csv')
+    RselX,RselY = wczytajDane('rsel.csv')
+
+
+    #print file2celY
+
+    plt.plot(RselX,RselY, label = '1-Evol-RS')
+    plt.plot(CelRsX,CelRsY, label = '1-Coev-RS')
+    plt.plot(TwoCelRsX,TwoCelRsY, label = '2-Coev-RS')
+    plt.plot(CelX,CelY, label = '1-Coev')
+    plt.plot(TwoCelX,TwoCelY, label = '2-Coev')
+
+
+
+
+    plt.legend(loc = 4)
+    #plt.legend(('1-Evol-RS','1-Coev-RS','2-Coev-RS','1-Coev','2-Coev'))
+    #plt.plot([110000,210000,410000,500000],[0.1,0.2,0.8,0.9])
+
+
+    plt.savefig('myplot.pdf')
+    plt.close()
+
+if __name__ == '__main__':
+    main()
